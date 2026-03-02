@@ -10,4 +10,5 @@ CREATE TABLE IF NOT EXISTS example_catalog.example_schema.table_example1 (
     record_source STRING
 )
 STORED AS DELTA
+PARTITIONED BY (crd_dt)
 LOCATION '/example/path/${env_name}/example_schema/table_example1'
