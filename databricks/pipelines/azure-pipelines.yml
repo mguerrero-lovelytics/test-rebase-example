@@ -2,19 +2,20 @@ trigger:
 	branches:
 		include:
 			- main
+      - release/*
 
-pool:
-	vmImage: 'ubuntu-latest'
+# pool:
+# 	vmImage: 'ubuntu-latest'
 
-variables:
-	SQL_FOLDER: 'source/tables/WFM-001/BASE'
+# variables:
+# 	SQL_FOLDER: 'source/tables/WFM-001/BASE'
 
 stages:
 	- stage: ExecuteSQLFiles
 		displayName: 'Ejecutar archivos SQL en Databricks'
 		jobs:
 			- job: RunSQL
-				displayName: 'Ejecutar SQL'
+				displayName: 'Ejecutar SQL cambiado o corregido'
 				steps:
 					- script: |
 							echo "Listando archivos SQL en $SQL_FOLDER"
