@@ -5,4 +5,5 @@ CREATE TABLE IF NOT EXISTS example_catalog.example_schema.table_example2 (
     crd_dt DATE
 )
 STORED AS DELTA
-LOCATION '/example/path/${env_name}/example_schema/table_example2'
+PARTITIONED BY (crd_dt)
+LOCATION '/example/path/${env_name}/base_location2/example_schema/table_example2'
