@@ -1,0 +1,36 @@
+trigger:
+	branches:
+		include:
+			- main
+
+pool:
+	vmImage: 'ubuntu-latest'
+
+variables:
+	SQL_FOLDER: 'source/tables/WFM-001/BASE'
+
+stages:
+	- stage: ExecuteSQLFiles
+		displayName: 'Ejecutar archivos SQL en Databricks'
+		jobs:
+			- job: RunSQL
+				displayName: 'Ejecutar SQL'
+				steps:
+					- script: |
+							echo "Listando archivos SQL en $SQL_FOLDER"
+							find $SQL_FOLDER -type f -name '*.sql'
+						displayName: 'Listar archivos SQL'
+					- script: |
+							echo "Ejecutando archivos SQL en Databricks via JDBC Auth Strategy 11 (token client id)"
+							for sql_file in $(find $SQL_FOLDER -type f -name '*.sql'); do
+								echo "Ejecutando $sql_file"
+								java -cp "databricks-jdbc-driver.jar" com.databricks.client.jdbc.Driver \
+									--hostname "$DATABRICKS_HOST" \
+									--port "$DATABRICKS_PORT" \
+									--tokenClientId "$DATABRICKS_CLIENT_ID" \
+									--tokenClientSecret "$DATABRICKS_CLIENT_SECRET" \
+									--tokenEndpoint "$DATABRICKS_TOKEN_ENDPOINT" \
+									--httpPath "$DATABRICKS_HTTP_PATH" \
+									--sql "$(cat $sql_file)"
+							done
+						displayName: 'Ejecutar SQL en Databricks'
